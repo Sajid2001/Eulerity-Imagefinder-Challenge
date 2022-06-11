@@ -34,7 +34,7 @@ public class ImageScraperMulti implements Runnable{
         imageScrape(1, first_url);
     }
 
-
+    //recursively looks through the webpage. Stops after a few levels.
     public void imageScrape(int level, String url){
         if(level <= MAX_DEPTH){
             Document document = request(url);
@@ -48,6 +48,7 @@ public class ImageScraperMulti implements Runnable{
                     imageURLS.add(link);
                 }
 
+                //updates the document
                 for (Element link: document.select("a[href]")){
                     String next_link = link.absUrl("href");
                     if (visitedLinks.contains(next_link) == false){
@@ -58,6 +59,7 @@ public class ImageScraperMulti implements Runnable{
         }
     }
 
+    //sets the Document variable given a url
     private Document request(String url){
         try{
             Connection connection = Jsoup.connect(url).ignoreContentType(true)
@@ -68,6 +70,7 @@ public class ImageScraperMulti implements Runnable{
 
             Document doc = connection.get();
 
+            //if the request is good, print out the url and add to the visited links list
             if (connection.response().statusCode() == 200){
                 System.out.println("\n**Bot ID:" + ID + " received webpage at " + url);
 
